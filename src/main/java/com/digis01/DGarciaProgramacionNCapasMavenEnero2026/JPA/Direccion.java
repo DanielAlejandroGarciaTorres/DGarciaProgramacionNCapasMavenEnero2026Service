@@ -1,5 +1,6 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.JPA;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,6 +25,7 @@ public class Direccion {
     @ManyToOne
     @JoinColumn(name = "idcolonia")
     public Colonia Colonia;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY) //carga peresoza - proxy
     @JoinColumn(name = "idalumno")
     public Alumno Alumno;
@@ -59,6 +61,14 @@ public class Direccion {
 
     public void setNumeroExterior(String NumeroExterior) {
         this.NumeroExterior = NumeroExterior;
+    }
+
+    public Colonia getColonia() {
+        return Colonia;
+    }
+
+    public void setColonia(Colonia Colonia) {
+        this.Colonia = Colonia;
     }
     
     

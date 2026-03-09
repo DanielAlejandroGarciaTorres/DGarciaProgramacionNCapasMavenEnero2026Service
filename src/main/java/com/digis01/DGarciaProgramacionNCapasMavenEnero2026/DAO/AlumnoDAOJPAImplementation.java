@@ -28,6 +28,7 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
             TypedQuery<Alumno> queryAlumno = entityManager.createQuery("FROM Alumno", Alumno.class);
             List<Alumno> alumnos = queryAlumno.getResultList();
             
+            result.objects = new ArrayList<>(alumnos);
             
             // mapper ...  AlumnoJPA -> AlumnoML   -- modelMapper 
             
