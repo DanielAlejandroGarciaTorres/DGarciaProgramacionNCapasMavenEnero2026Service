@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
+public class AlumnoDAOJPAImplementation implements IAlumnoJPA {
 
     @Autowired
     private EntityManager entityManager; // JPA
@@ -22,24 +22,23 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
     @Override
     public Result GetAll() {
         Result result = new Result();
-        
+
         try {
-            
+
             TypedQuery<Alumno> queryAlumno = entityManager.createQuery("FROM Alumno", Alumno.class);
             List<Alumno> alumnos = queryAlumno.getResultList();
-            
+
             result.objects = new ArrayList<>(alumnos);
-            
+
             // mapper ...  AlumnoJPA -> AlumnoML   -- modelMapper 
-            
             result.correct = true;
-            
+
         } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        
+
         return result;
     }
 
@@ -47,31 +46,30 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
     @Transactional
     public Result Add(Alumno alumno) {
         Result result = new Result();
-        
-        try{
-            
+
+        try {
+
 //            direccionJPA.Alumno = alumno;
-            
             entityManager.persist(alumno);
-            
+
             result.correct = true;
-            
-        }catch(Exception ex){
+
+        } catch (Exception ex) {
             result.correct = false;
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        
+
         return result;
     }
 
     @Override
     public Result GetById(int idAlumno) {
         Result result = new Result();
-        try{
+        try {
             Alumno alumno = entityManager.find(Alumno.class, idAlumno);
             // jpa -> Ml
-        }catch(Exception ex){
+        } catch (Exception ex) {
         }
         return result;
     }
@@ -79,8 +77,8 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
     @Override
     @Transactional
     public Result Update(Alumno alumno) {
-         Result result = new Result();
-        try{
+        Result result = new Result();
+        try {
             Alumno alumnoBD = entityManager.find(Alumno.class, alumno.getIdAlumno());
             if (alumno != null) { // alumno si existe
                 //ML -> JPA
@@ -88,7 +86,7 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
                 alumnoJPA.Direcciones = alumnoBD.Direcciones;
                 entityManager.merge(alumnoJPA);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
         }
         return result;
     }
@@ -97,7 +95,7 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
     @Transactional
     public Result Delete(int idAlumno) {
         Result result = new Result();
-        try{
+        try {
             Alumno alumno = entityManager.find(Alumno.class, idAlumno);
             if (alumno != null) {
                 entityManager.remove(alumno);
@@ -106,12 +104,31 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
                 result.correct = false;
                 result.errorMessage = "No se encontro el recurso";
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
         }
         return result;
     }
-    
-    
-    
-    
+
+    @Override
+    public Result getByEmail(String email) {
+        Result result = new Result();
+
+        try {
+
+            TypedQuery<Alumno> queryAlumno = entityManager.createQuery("FROM Alumno WHERE Email = :pEmail", Alumno.class);
+            queryAlumno.setParameter("pEmail", email);
+
+            result.object = queryAlumno.getSingleResult();
+            result.correct = true;
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.ex = e;
+            result.errorMessage = e.getLocalizedMessage();
+
+        }
+
+        return result;
+    }
+
 }

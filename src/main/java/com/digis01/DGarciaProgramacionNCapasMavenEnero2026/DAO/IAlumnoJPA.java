@@ -11,4 +11,5 @@ public interface IAlumnoJPA {
     Result GetById(int idAlumno);
     Result Update(Alumno alumno);
     Result Delete(int idAlumno);
+    Result getByEmail(String email);
 }
