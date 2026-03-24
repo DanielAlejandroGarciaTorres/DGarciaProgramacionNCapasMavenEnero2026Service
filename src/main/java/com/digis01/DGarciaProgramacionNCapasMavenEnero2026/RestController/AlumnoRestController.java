@@ -2,10 +2,13 @@ package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.RestController;
 
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.AlumnoDAOJPAImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.JPA.Result;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +34,9 @@ public class AlumnoRestController {
                         - /api/alumno/password ** body alumno/password - JSON 
     */
     
-    @GetMapping
+    @GetMapping()
+    @PreAuthorize("hasRole('1er Semestre')") //hasAnyRole 
     public ResponseEntity GetAll() {
-
         try {
             Result result = alumnoJPADAOImplementation.GetAll();
 
@@ -59,5 +62,16 @@ public class AlumnoRestController {
         /*proeso interno*/
         return ResponseEntity.ok(this);
     }
+    
+    @GetMapping("test")
+    public ResponseEntity test(Authentication authentication){
+        Map<String, Object> json = new HashMap<>();
+        
+        json.put("user", authentication.getName());
+        json.put("rol", authentication.getAuthorities());
+        
+        return ResponseEntity.ok(json);
+    }
+    
 
 }
